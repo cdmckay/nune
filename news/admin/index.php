@@ -29,7 +29,7 @@ if ($mode == 'authorize') {
 			$value = array($auth_username,$auth_password);
 			$value = serialize($value);
 
-			setcookie('cookie_auth',$value,time()+3600,"/","nolfuniverse.dhs.org",0);
+			setcookie('cookie_auth',$value,time()+3600,"/",$www_site_address,0);
 			$confirmed = 1;
 
 		} else {
@@ -107,7 +107,7 @@ if ($confirmed == 1) {
 
 <BR>
 <TABLE WIDTH="200" ALIGN="CENTER" BORDER="1" BGCOLOR="#003366"><TR>
-<TD> <DIV ALIGN="CENTER"> <FONT COLOR="#FFFFFF"><B>Version 1.0</B></FONT> </DIV> </TD>
+<TD> <DIV ALIGN="CENTER"> <FONT COLOR="#FFFFFF"><B>Version 1.5a</B></FONT> </DIV> </TD>
 </TR></TABLE>
 
 </BODY>

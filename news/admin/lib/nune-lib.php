@@ -22,8 +22,6 @@ function nune_list ($type) {
 
 	if ($type == 'news') {
 
-		echo '<SMALL><B><FONT FACE="Verdana, Arial">Current News</FONT></B></SMALL><BR><BR>';
-
 		while ($i < $number) {
 
      		$value = get_values($i);
@@ -93,8 +91,6 @@ function nune_list ($type) {
 		}
 
 	} elseif ($type == 'archive') {
-
-		echo '<SMALL><B><FONT FACE="Verdana, Arial">Old Moldy News</FONT></B></SMALL><BR><BR>';
 
 		while ($i < $number) {
 
@@ -283,8 +279,6 @@ function nune_confirm ($type) {
 		$query = "DELETE FROM $newstable WHERE(artnr=$item)";
 		$insert = MYSQL_QUERY($query);
 
-		$artnr = mysql_insert_id();
-
 		echo "<FONT FACE=\"$font\">";
           echo "<B>Article $artnr</B> has been deleted.<BR>";
           echo '</FONT>';
@@ -333,7 +327,7 @@ function nune_special ($type) {
 		# prepare yourself for the most advanced code ever seen by a human being
 		#
 
-		setcookie('cookie_auth','nothing',time()+3600,"/","nolfuniverse.dhs.org",0);
+		setcookie('cookie_auth','nothing',time()+3600,"/",$www_site_address,0);
 
 		include("$head");
 
@@ -365,8 +359,8 @@ function print_html ($artnr,$title,$previewtext,$author,$email,$date) {
 
 <A NAME=\"$artnr\"></A>
 <SMALL><FONT FACE=\"Verdana\">
-<B><FONT COLOR=\"#003366\">$title</FONT></B>
-$date <a href=\"mailto:$email\">$author</a>
+<B><FONT COLOR=\"#0033CC\">$title</FONT></B>
+$date
 <FONT COLOR=\"#000000\"><BR>
 $previewtext
 </FONT>

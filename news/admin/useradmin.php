@@ -23,7 +23,7 @@ $nicedate = date("[h:i A] l, F d Y");
 
 if ($nune_access < 3) {
 
-	echo "<META HTTP-EQUIV=\"Refresh\" CONTENT=\"0; URL=newsadmin.php?mode=admin\">";
+	echo "<META HTTP-EQUIV=\"Refresh\" CONTENT=\"0; URL=newsadmin.php?special=admin\">";
 	exit;
 
 }
@@ -180,15 +180,13 @@ function display_option ($option_name) {
 
 	} else {
 
-		global $back_to_admin;
-
 		echo 'What do you want to do? <BR><BR>';
 
 		echo '<A HREF="useradmin.php?option=add"> Add a new user </A><BR>';	
 		echo '<A HREF="useradmin.php?option=edit"> Edit an existing user </A><BR>';
 		echo '<A HREF="useradmin.php?option=delete"> Delete an old user </A><BR>';
 		echo '<BR>';
-		echo "<a href=\"newsadmin.php?mode=admin\">$back_to_admin</a>";
+		echo "<a href=\"newsadmin.php?special=admin\">Back to options...</a>";
 
 	}
 
