@@ -13,7 +13,7 @@ Access Level: <B><? echo $nune_access; ?></B>
 
 <BR>
 <TABLE WIDTH="200" ALIGN="CENTER" BORDER="1" BGCOLOR="#003366"><TR>
-<TD> <DIV ALIGN="CENTER"> <FONT COLOR="#FFFFFF"><B>Version 1.5a</B></FONT> </DIV> </TD>
+<TD> <DIV ALIGN="CENTER"> <FONT COLOR="#FFFFFF"><B><? echo $version; ?></B></FONT> </DIV> </TD>
 </TR></TABLE>
 
 </BODY>

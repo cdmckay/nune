@@ -1,51 +1,41 @@
-#
-# Table structure for table 'news'
-#
+CREATE TABLE comments (
+  cid bigint(20) unsigned DEFAULT '0' NOT NULL auto_increment,
+  assoc_post int(10) unsigned DEFAULT '0' NOT NULL,
+  username varchar(20) DEFAULT '' NOT NULL,
+  email varchar(50) DEFAULT '' NOT NULL,
+  host varchar(50) DEFAULT '' NOT NULL,
+  comment blob NOT NULL,
+  date varchar(50) DEFAULT '' NOT NULL,
+  timestamp timestamp(14),
+  PRIMARY KEY (cid)
+);
 
 CREATE TABLE news (
-  artnr int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
+  pid bigint(20) unsigned DEFAULT '0' NOT NULL auto_increment,
   title varchar(70) DEFAULT '' NOT NULL,
-  previewtext blob NOT NULL,
-  htmltext blob NOT NULL,
+  article blob NOT NULL,
+  more_article blob,
   author varchar(50) DEFAULT '' NOT NULL,
   email varchar(50) DEFAULT '' NOT NULL,
   date varchar(50) DEFAULT '' NOT NULL,
-  PRIMARY KEY (artnr)
+  timestamp timestamp(14),
+  PRIMARY KEY (pid)
 );
 
-#
-# Table structure for table 'user'
-#
+CREATE TABLE score (
+  username varchar(20) DEFAULT '' NOT NULL,
+  plus bigint(20) unsigned DEFAULT '1' NOT NULL,
+  minus bigint(20) unsigned DEFAULT '1' NOT NULL,
+  mp int(10) unsigned DEFAULT '0' NOT NULL,
+  last timestamp(14)
+);
 
 CREATE TABLE user (
+  user_id bigint(20) unsigned DEFAULT '0' NOT NULL auto_increment,
   username varchar(20) DEFAULT '' NOT NULL,
   password varchar(50) DEFAULT '' NOT NULL,
   email varchar(50) DEFAULT '' NOT NULL,
   access int(1) unsigned DEFAULT '0' NOT NULL,
-  PRIMARY KEY (username)
-); 
-
-#
-# This is the confirmation post
-#
-
-INSERT INTO news VALUES (
-	1,
-	'Welcome to NUNE!',
-	'Welp, welcome to NUNE, yet another news script for your enjoyment.  To login, go to the news/admin directory and login as username nune, password nune (CASE SENSITIVE) and then delete that user and make a new one with Access Level 3.  Then make as many as you damn well please :)  Please report any bugs you find to <A HREF=\"mailto:mercutio2k@hotmail.com\">mercutio2k@hotmail.com</A>.  Any changes you make please mail me just so I can see what people have done with my script.  NUNE was created from MyNews, another news script.  Although MyNews was used as a base, very little remains from that script.  Enjoy!',
-	'',
-	'Mercutio',
-	'mercutio2k@hotmail.com',
-	'[00:00 AM] January 0, 0000'
+  PRIMARY KEY (user_id,username)
 );
 
-#
-# This is the first user
-#
-
-INSERT INTO user VALUES (
-	'nune',
-	'lI1omYv.pyEhQ',
-	'nune@nune.com',
-	'3'
-);

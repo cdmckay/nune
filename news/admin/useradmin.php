@@ -8,13 +8,7 @@
 
 require('config/nune.conf');
 
-include("$head");
-
-#
-# This part deals with the date...
-#
-
-$nicedate = date("[h:i A] l, F d Y");
+include($head);
 
 #
 # This is the main control structure for this file.  Depending on the POST results,
@@ -28,30 +22,26 @@ if ($nune_access < 3) {
 
 }
 
-mysql_connect($hostname, $username, $password) or die('Unable to connect to database');
-mysql_select_db("$dbName") or die('Unable to select database');
+mysql_connect($hostname, $username, $password) or die('Unable to connect to database.');
+mysql_select_db($database) or die('Unable to select database');
 
 if (!$option && !$confirm) {	# if there is no mode argument
 
-	display_option();		# then just display the options
+	display_option('');		# then just display the options
 
 } else {					# otherwise, mode must be argumented
 
-	if ($option) {
-
+	if ($option)
 		display_option($option);
 
-	} elseif ($confirm) {
-
+	elseif ($confirm)
 		send_confirm($confirm);
-
-	}
 
 }						# now we're done that...
 
 mysql_close();
 
-include("$foot");
+include($foot);
 
 #
 # Functions
@@ -85,10 +75,11 @@ function display_option ($option_name) {
 
 		if ($person) {
 
-			$query	= "SELECT * FROM $usertable WHERE username='$person'";
-			$result	= mysql_query($query);
-
+			$result	= mysql_query("SELECT * FROM $usertable WHERE username='$person'");
 			$row		= mysql_fetch_array($result);
+
+			$row[username]	=	stripslashes($row[username]);
+			$row[email]	=	stripslashes($row[email]);
 
 			echo "<H3><B>Edit an existing user</B></H3>\n";
 			echo '<FORM ACTION="useradmin.php?confirm=edit" METHOD="post">';
@@ -104,26 +95,22 @@ function display_option ($option_name) {
 			echo "<INPUT TYPE=\"text\" NAME=\"new_email\" VALUE=\"$row[email]\" SIZE=\"40\"><BR><BR>";
 			echo 'Access Level (1-3):<BR><BR>';
 
-			if ($row[access] == 1) {
+			if ($row[access] == 1)
+				$CHECKED[1] = 'CHECKED';
 
-				$CHECKED1 = 'CHECKED';
+			elseif ($row[access] == 2)
+				$CHECKED[2] = 'CHECKED'; 
 
-			} elseif ($row[access] == 2) {
-			
-				$CHECKED2 = 'CHECKED'; 
+			elseif ($row[access] == 3)
+				$CHECKED[3] = 'CHECKED';
 
-			} elseif ($row[access] == 3) {
-
-				$CHECKED3 = 'CHECKED';
-
-			}
-
-			echo '1:<INPUT TYPE="radio" NAME="new_access" VALUE="1"' . " $CHECKED1" . '>
+			echo '1:<INPUT TYPE="radio" NAME="new_access" VALUE="1"' . " $CHECKED[1]" . '>
 			Can only edit and delete own posts.<BR>';
-			echo '2:<INPUT TYPE="radio" NAME="new_access" VALUE="2"' . " $CHECKED2" . '>
+			echo '2:<INPUT TYPE="radio" NAME="new_access" VALUE="2"' . " $CHECKED[2]" . '>
 			Can edit and delete any posts.<BR>';
-			echo '3:<INPUT TYPE="radio" NAME="new_access" VALUE="3"' . " $CHECKED3" . '>
+			echo '3:<INPUT TYPE="radio" NAME="new_access" VALUE="3"' . " $CHECKED[3]" . '>
 			Can edit and delete any posts, and create, edit and delete users.<BR><BR>';
+			echo "<input type=\"hidden\" name=\"user_id\" value=\"$row[user_id]\">\n";
 			echo '<input type="submit" value="submit"> ';
 			echo '<input type="reset" value="clear">';
 			echo '</FORM>';
@@ -132,8 +119,7 @@ function display_option ($option_name) {
 
 		} else {
 
-			$query 	= "SELECT username FROM $usertable";
-			$result	= mysql_query($query);
+			$result	= mysql_query("SELECT username,access FROM $usertable");
 		
 			echo '<FORM ACTION="useradmin.php?option=edit" METHOD="post">';
 			echo 'Select a user to edit...<BR><BR>';
@@ -141,11 +127,11 @@ function display_option ($option_name) {
 			
 			while ($row = mysql_fetch_array($result)) {
 				$userlist[] = $row['username'];
-               }
-
-			for ($i = 0; $i <= count($userlist)-1; $i++) {
-				echo "<OPTION VALUE=\"$userlist[$i]\">$userlist[$i]\n";
+				$access[]   = $row['access'];
 			}
+
+			for ($i = 0; $i < count($userlist); $i++)
+				echo "<OPTION VALUE=\"$userlist[$i]\">&gt;&gt; [Level $access[$i]] $userlist[$i]\n";
 
 			echo '</SELECT><BR><BR>';
 			echo '<input type="submit" value="submit"> ';
@@ -157,21 +143,18 @@ function display_option ($option_name) {
 	} elseif ($option_name == 'delete') {
 
 		global $usertable;
-	
-		$query    = "SELECT username FROM $usertable";
-		$result   = mysql_query($query);
+
+		$result   = mysql_query("SELECT username FROM $usertable");
 
 		echo '<FORM ACTION="useradmin.php?confirm=delete" METHOD="post">';
 		echo 'Select a user to vaporize...<BR><BR>';
 		echo '<SELECT NAME="person" SIZE="5">';
 
-		while ($row = mysql_fetch_array($result)) {
+		while ($row = mysql_fetch_array($result))
 			$userlist[] = $row['username'];
-		}
 
-		for ($i = 0; $i <= count($userlist)-1; $i++) {
+		for ($i = 0; $i <= count($userlist)-1; $i++)
 			echo "<OPTION VALUE=\"$userlist[$i]\">$userlist[$i]\n";
-		}
 
 		echo '</SELECT><BR><BR>';
 		echo '<input type="submit" value="submit"> ';
@@ -180,13 +163,13 @@ function display_option ($option_name) {
 
 	} else {
 
-		echo 'What do you want to do? <BR><BR>';
+		echo '<H3>User Admin Menu...</H3>';
 
 		echo '<A HREF="useradmin.php?option=add"> Add a new user </A><BR>';	
 		echo '<A HREF="useradmin.php?option=edit"> Edit an existing user </A><BR>';
 		echo '<A HREF="useradmin.php?option=delete"> Delete an old user </A><BR>';
 		echo '<BR>';
-		echo "<a href=\"newsadmin.php?mode=admin\">Back to options...</a>";
+		echo "<a href=\"newsadmin.php?special=admin\">Back to options...</a>";
 
 	}
 
@@ -195,7 +178,6 @@ function display_option ($option_name) {
 function send_confirm ($argument) {
 
 	global $usertable;
-	$total = get_user_info('total');
 
 	if ($argument == 'add') {
 
@@ -209,9 +191,8 @@ function send_confirm ($argument) {
 		# first thing we do is check if the user name already exists
 		#
 
-		$check_string = "select * from $usertable where username=\"$new_username\"";	
-		$check = mysql_query($check_string);
-		$check = mysql_affected_rows();
+		$result	= mysql_query("select * from $usertable where username=\"$new_username\"");
+		$check 	= mysql_num_rows($result);
 
 		if ($check) {
 
@@ -219,15 +200,15 @@ function send_confirm ($argument) {
 
 		} else {
 
-			$new_password = crypt($new_password,'lI');
+			$result = 
+		mysql_query("INSERT INTO $usertable VALUES('','$new_username',PASSWORD('$new_password'),'$new_email','$new_access')");
 
-			$insert = "insert into $usertable values('$new_username','$new_password','$new_email','$new_access')";
-			$result = MYSQL_QUERY($insert);
+			$user_id = mysql_insert_id();
 
 			echo "User successfully created.<BR><BR>";
 
 			echo "Username: $new_username<BR>";
-			echo "Password: $new_password<BR>";
+			echo "User ID: $user_id<BR>";
 			echo "E-Mail: $new_email<BR>";
 			echo "Access Level: $new_access";
 
@@ -235,39 +216,41 @@ function send_confirm ($argument) {
 	
 	} elseif ($argument == 'edit') {
 
-		global $new_username, $new_password, $new_email, $new_access, $old_password;
+		global $new_username, $new_password, $new_email, $new_access, $old_password, $user_id;
 
-		if ($old_password) {
+		if ($old_password)
+			$result = 
+			mysql_query("REPLACE INTO $usertable VALUES('$user_id','$new_username','$old_password','$new_email','$new_access')");
 
-			$password = $old_password;
-
-		} else {
-
-			$password = crypt($new_password,'lI');
-
-		}
-
-		$query 	= "REPLACE INTO $usertable VALUES('$new_username','$password','$new_email','$new_access')";
-		$result	= mysql_query($query);
+		else
+			$result = 
+			mysql_query("REPLACE INTO $usertable VALUES('$user_id','$new_username',PASSWORD('$new_password'),'$new_email','$new_access')");
 
 		echo "User successfully changed.<BR><BR>";
 
           echo "Username: $new_username<BR>";
-          echo "New Password: $password<BR>";
+		echo "User ID: $user_id<BR>";
           echo "New E-Mail: $new_email<BR>";
           echo "New Access Level: $new_access";
 
 	} elseif ($argument == 'delete') {
 
-		global $person;
+		global $person, $nune_username;
 
-		$query	= "DELETE FROM $usertable WHERE(username='$person')";
-		$result	= mysql_query($query);
+		if ((strcasecmp($person, $nune_username)) == 0) {
 
-		echo "User successfully terminated.<BR><BR>";
+			echo "User to delete is same as current user.<BR>\n";
+			echo "Cannot allow deletion.\n";
 
-		echo "Username: $person is now unperson.";
+		} else {
+
+			$result	= mysql_query("DELETE FROM $usertable WHERE(username='$person')");
+
+			echo "User successfully terminated.<BR><BR>";
+			echo "Username: $person is now unperson.";
 	
+		}
+
 	}
 
 	#
@@ -277,21 +260,3 @@ function send_confirm ($argument) {
      echo "<META HTTP-EQUIV=\"Refresh\" CONTENT=\"2; URL=useradmin.php\">";
 
 }
-			
-
-function get_user_info ($argument) {
-
-	if ($argument == 'total') {
-
-		global $usertable;
-
-		$result1  =    mysql_query("SELECT Count(*) as total FROM $usertable") or die(mysql_error());
-		$row      =    mysql_fetch_Array($result1);
-		$total    =    $row[total];
-	
-		return $total;
-
-	}
-
-}
-

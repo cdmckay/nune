@@ -10,41 +10,32 @@ require('config/nune.conf');
 
 if ($mode == 'authorize') {
 
-	mysql_connect($hostname, $username, $password) or die('Unable to connect to database');
-	mysql_select_db("$dbName") or die('Unable to select database');
+	mysql_connect($hostname, $username, $password) or die('Unable to connect to database.');
+	mysql_select_db($database) or die('Unable to select database.');
 
-	$query 	= "SELECT * FROM $usertable WHERE username='$auth_username'";
+	$query 	= "SELECT username FROM $usertable WHERE username='$auth_username' AND password=PASSWORD('$auth_password')";
 	$result	= mysql_query($query);
 
 	$check	= mysql_num_rows($result);
 
 	if ($check) {
 
-		$row		= mysql_fetch_array($result);
-	
-		$auth_password = crypt($auth_password, 'lI');
-	
-		if ($row[password] == $auth_password) {	
+		$result = mysql_query("SELECT PASSWORD('$auth_password')");
+		$crypt_password = mysql_result($result, 0);
 
-			$value = array($auth_username,$auth_password);
-			$value = serialize($value);
+		$value = array($auth_username,$auth_password);
+		$value = serialize($value);
 
-			setcookie('cookie_auth',$value,time()+3600,"/",$www_site_address,0);
-			$confirmed = 1;
-
-		} else {
-
-			$confirmed = 'Sorry, the passwords do not match.';
-
-		}
+		setcookie($cookie_name[auth],$value,time()+10000,"/",$www_cookie_path,0);
+		$confirmed = 1;
 
 	} else {
 
-		$confirmed = 'Sorry, user does not exist.';
+		$confirmed = 'Sorry, user does not exist or invalid password.';
 
 	}
 
-} elseif ($cookie_auth && $cookie_auth != 'nothing') {
+} elseif ($$cookie_name[auth] && $$cookie_name[auth] != 'nothing') {
 
 	$confirmed = 1;
 
@@ -71,15 +62,15 @@ if ($mode == 'authorize') {
 <TABLE WIDTH="70%" ALIGN="CENTER" BORDER="1" BGCOLOR="#EEEEEE" CELLPADDING="4"><TR>
 <TD>
 
-Welcome to NUNE by Cameron McKay, a news script based off MyNews by Mike McMurray.<BR>
-Login below to continue.  NUNE is licensed under the GPL.
+Welcome to NUNE News Script by Cameron McKay.<BR>
+Login below to continue.  NUNE is licensed under a BSD-style license.
 <BR><BR>
 
 <?
 
 if ($confirmed == 1) {
 
-	echo 'A cookie has been (hopefully) sent to your computer.<BR>';
+	echo "A cookie ($cookie_name[auth]) has been (hopefully) sent to your computer.<BR>";
 	echo 'You are authorized, please <A HREF="newsadmin.php?special=admin">proceed</A>.';
 
 } else {
@@ -107,7 +98,7 @@ if ($confirmed == 1) {
 
 <BR>
 <TABLE WIDTH="200" ALIGN="CENTER" BORDER="1" BGCOLOR="#003366"><TR>
-<TD> <DIV ALIGN="CENTER"> <FONT COLOR="#FFFFFF"><B>Version 1.5a</B></FONT> </DIV> </TD>
+<TD> <DIV ALIGN="CENTER"> <FONT COLOR="#FFFFFF"><B><? echo $version; ?></B></FONT> </DIV> </TD>
 </TR></TABLE>
 
 </BODY>
