@@ -1,0 +1,25 @@
+CHANGES:
+
+< NUNE 0.5 > (unreleased)
+
+The beginning of the hackage of MyNews-1.0 code.  No new features, mostly code cleanup.
+
+< NUNE 1.0 > (unreleased)
+
+Many new features including archiving, unique logins, better administration setup.
+Pretty much everything you see now.
+
+< NUNE 1.5 > (unreleased)
+
+Complete re-working of code.  Old MyNews-1.0 include system thrown out in favour of a more clear
+function-based system.  MyNews 1.0 is pretty much absent from the code.  Reduced configuration
+files to just one (nune.conf).  Various bug fixes.
+
+< NUNE 1.5a >
+
+Minor date bug fixed.
+
+< NUNE 1.5b >
+
+The COPYING file was very screwed up (not sure why).  Replaced with real copy of the GPL.  README
+file fixed up.  Nothing special.

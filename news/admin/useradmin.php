@@ -186,7 +186,7 @@ function display_option ($option_name) {
 		echo '<A HREF="useradmin.php?option=edit"> Edit an existing user </A><BR>';
 		echo '<A HREF="useradmin.php?option=delete"> Delete an old user </A><BR>';
 		echo '<BR>';
-		echo "<a href=\"newsadmin.php?special=admin\">Back to options...</a>";
+		echo "<a href=\"newsadmin.php?mode=admin\">Back to options...</a>";
 
 	}
 

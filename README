@@ -1,0 +1,132 @@
+README:
+
+*** Welcome to NUNE 1.5b. ***
+
+Table of Contents:
+
+* Introduction
+* Requirements
+* Features
+* Installation
+* Configuration
+* Troubleshooting
+* Contact Information
+
+
+< Introduction >
+ 
+This only works with MySQL at the moment.
+If you want to make it work with other databases, please feel free to do so.
+
+Firstly, I did not right this script from scratch, I took MyNews as a base and HEAVILY modified, rewrote,
+documented and cleaned up his code.  It works in a completely different fashion and doesn't look at all
+like MyNews anymore.  But Mike McMurray still deserves credit.  He also gives credit in his README:
+
+"First thing I would like to do is to give credit where it is due. I did
+not write this script from scratch, however I did make major modifications
+to it, and wrote new subroutines to execute different things within this
+script. So right now, I would like to thank Stig-Ørjan Smelror of
+winther.net (stig@winter.net) who if it weren't for his origional concept
+I probably never would have persued this!"
+
+
+< Requirements >
+
+	* Greater than or equal to PHP 4.0.0
+	* Greater than or equal to MySQL 3.22 (lower version may work)
+	* A Web Server (I suggest Apache)
+	* A somewhat functional brain (not required but recommended)
+
+
+< Features >
+
+	* Posting, editing, deleting new and old news items
+	* Administration via the WWW
+	* Unique logins and access levels
+	* Basic news archiving
+
+
+< Installation >
+
+1.  Create a new mysql database with a name of your choice, usually 'nune' or 'news'.  If you don't have permission to create a new database, have an administrator do it.
+
+Example:
+
+prompt> mysql -u root -p
+(enter password)
+mysql> create database nune;
+mysql> exit;
+
+2.  Create a special user with access to the database, usually called 'nunemgr'.
+
+Example:
+
+prompt> mysql -u root -p
+(enter password)
+mysql> GRANT ALL PRIVILEGES ON nune.* TO nunemgr@localhost IDENTIFIED BY 'some_pass';
+mysql> exit;
+
+Note: If you have a MySQL user and that user is the one with privileges to your nune database, then you can skip this step.
+
+3.  Input the nune.sql file into your nune databases.
+
+Example:
+
+prompt> mysql -u nunemgr -p nune < nune.sql
+(enter what you put as some_pass above)
+
+
+< Configuration >
+
+Whew!  Now you're done the hard part.  
+
+1.  Go to the news/admin/config directory and edit nune.conf.  The file is completely documented so it should be no problem. 
+
+2.  Move the news/ directory to your web area...
+
+Example:
+
+prompt> mv news /usr/local/share/httpd
+
+3.  See if you did everything right.  Go to your favourite browser and look at the page.
+
+Example:
+
+prompt> w3m http://www.mylamepage.com/news/index.php
+
+4.  It's probably a good idea to include the index.php inside a page.  You should know how to do this on your own, but here's how you would do it with PHP.
+
+Example:
+
+<? include('news/index.php'); ?>  
+
+5.  Let me know about any problems.  Enjoy!
+
+NOTE: For some reason, you can't edit the included post (the introduction).  No big deal.  Just to let you homees know.
+
+
+< Troubleshooting >
+
+Q1.  I get the error: "Parse error: parse error in lib/nune-lib.php on line 115" when I login to NUNE.
+
+A1.  Well, the requirements for NUNE do specify PHP4, and that particular line uses a PHP4-only function,
+     so that's probably the problem.  If you absolutely can not upgrade to PHP4, then you can do the following:
+
+     Replace:
+
+     Line 115: foreach ($archive as $key => $value) {
+
+     with
+
+     Line 115: while (list($key, $value) = each ($archive)) {
+
+     The two lines are functionally identical, with the exception that one is PHP4 specific.
+
+
+< Contact Information >
+
+You can contact to me with any questions, bugs, comments at mercutio2k@hotmail.com.
+
+Thanks,
+Cameron McKay
+Mercutio (mercutio2k@hotmail.com)

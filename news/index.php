@@ -1,7 +1,7 @@
 <?
 
-require("news/admin/config/nune.conf");
-require("news/admin/lib/nune-lib.php");
+require("$DOCUMENT_ROOT/news/admin/config/nune.conf");
+require("$DOCUMENT_ROOT/news/admin/lib/nune-lib.php");
 
 mysql_connect($hostname, $username, $password) or die('Unable to connect to database');
 mysql_select_db($dbName) or die('Unable to select database');

@@ -359,8 +359,8 @@ function print_html ($artnr,$title,$previewtext,$author,$email,$date) {
 
 <A NAME=\"$artnr\"></A>
 <SMALL><FONT FACE=\"Verdana\">
-<B><FONT COLOR=\"#0033CC\">$title</FONT></B>
-$date
+<B><FONT COLOR=\"#003366\">$title</FONT></B>
+$date <a href=\"mailto:$email\">$author</a>
 <FONT COLOR=\"#000000\"><BR>
 $previewtext
 </FONT>
