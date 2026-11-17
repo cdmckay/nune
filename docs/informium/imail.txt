@@ -1,0 +1,8 @@
+for informium:
+	allow for an open mail relay by accepting outside mail as an argument on the web
+
+mod_mail_enable = TRUE; // Allows users to mail local and remote users by using the address setup as 					// follows - user[!http://path/to/mail.php]
+			// Example:
+			// mercutio!http://informium.homeunix.net
+			// OR mercutio.
+mod_mail_relay  = TRUE; // Allows Informium to accept mail via mail.php.
